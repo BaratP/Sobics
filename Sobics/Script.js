@@ -32,7 +32,6 @@ $(document).ready(function() {
     timerBar();
     alaphelyzetetGeneral();
     let beszurasKezelo = setInterval(ujSortBeszur, ido);
-    console.log("0elindit")
     let oszlopszam;
     $(this).on('mousemove', function(e){
         let p = game_area.offset();
@@ -60,70 +59,10 @@ $(document).ready(function() {
         }
 
     });
-
+    let jatszhato=true;
     $(this).click(function (e){
-        //néha hibát dob és nem indítja az audiot addig ameddig nem interaktáltunk ezért ez egy alternnatív audio indítási utvonal;
-        sound.play();
-        if (lenn && soundbool) sound1.play();
-        else if (lenn) sound2.play();
-        soundbool=!soundbool;
-        let legalso,privatei=-1;
-        let p = game_area.offset();
-        let x = e.pageX - p.left;
-        let j = Math.round((x - offset_x / 2) / offset_x);
-        //megkeresi a legalsó téglát az oszlopba
-        for (let i=0;i<sorok_szama;i++) {
-            if ($('img[id=x'+i+'y'+j+']').attr('src')!=="" && $('img[id=x'+i+'y'+j+']').attr('src')!==undefined) {
-                legalso='img[id=x'+i+'y'+j+']';
-                privatei=i;
-            }
-            else {
-                break;
-            }
-        }
-        if (privatei+tegla_array.length>14 && lenn) return;
-        //ha nincs lenn akkor lekéri az egybetartozó téglákat
-        if (!lenn) {
-            tegla_array.length=0;
-            for (let i=sorok_szama-1;i>=0;i--) {
-                if ($('img[id=x'+i+'y'+j+']').attr('src')===$(legalso).attr('src')) {
-                    tegla_array.push($('img[id=x'+i+'y'+j+']'));
-                }
-                else if ($('img[id=x'+i+'y'+j+']').attr('src')==="" || $('img[id=x'+i+'y'+j+']').attr('src')===undefined){
-                }
-                else break
-            }
-            for (let i = 0; i<tegla_array.length;i++) {
-                let str = tegla_array[i].attr('id');
-                if (str.length===4)
-                    str = str.substring(0, 1) + 16 + str.substring(2);
-                else
-                    str = str.substring(0, 1) + (16) + str.substring(3);
-                tegla_array[i].attr('id',str);
-            }
-        }
-        //téglák mozgatása fel és le
-        let onmagahozKepestEltolas=1;
-        if (tegla_array[0]===legalso) onmagahozKepestEltolas=tegla_array.length+1;
-        for (let i=0;i<tegla_array.length;i++) {
-            if (lenn) {
-                let str = tegla_array[i].attr('id');
-                if (str.length===4)
-                    str = str.substring(0, 1) + (privatei+i+1) + str.substring(2);
-                else
-                    str = str.substring(0, 1) + (privatei+i+1) + str.substring(3);
-                tegla_array[i].attr('id',str);
-                tegla_array[i].animate({top: ((privatei+i+onmagahozKepestEltolas) * offset_y / 1.5)}, 100);
-            } else {
-                tegla = $(legalso);
-                tegla_array[i].animate({top: 530-i*offset_y/1.5}, 100);
-            }
-        }
-        if (lenn) {
-            osszetartozoTegla(tegla_array[0])
-            torles();
-        }
-        lenn=!lenn;
+        if (jatszhato)
+        clickAction(e);
     })
     function osszetartozoTegla(teglaId) {
         if (!megtalalt.includes(teglaId.attr('id')))
@@ -196,9 +135,7 @@ $(document).ready(function() {
                     ido=8000;
                     szinek_szama=4;
                     clearInterval(beszurasKezelo);
-                    console.log("1leallit");
                     beszurasKezelo= setInterval(ujSortBeszur,ido);
-                    console.log("1elindit");
                     elteltIdo=0;
                     score=0;
                     $('#score').text(score);
@@ -282,7 +219,7 @@ $(document).ready(function() {
         }
         legalsoSortMegmutat()
         setTimeout(function() {
-            console.log("2elindit");
+            jatszhato=true;
             beszurasKezelo = setInterval(ujSortBeszur, ido);
             score += ((14 - legalsoATablan + 1) * 10000);
             korKezdetiScore = score;
@@ -306,6 +243,7 @@ $(document).ready(function() {
         },(14-legalsoATablan+1)*100+1000);
     }
     function legalsoSortMegmutat() {
+        jatszhato=false;
         for (let i = 0; i < (15-legalsoATablan);i++) {
             for (let j = 0; j < oszlopok_szama; j++) {
                 setTimeout(function() {
@@ -314,9 +252,72 @@ $(document).ready(function() {
                     $('img[id=xx'+(14-i)+'yy'+j+']').css({left: j*offset_x,top: (15-i)*offset_y/1.5});
                     elteltIdo=(ido/1000)-1;
                     clearInterval(beszurasKezelo);
-                    console.log("2leallit")
                 }, i*100);
             }
         }
+    }
+    function clickAction(e) {
+        //néha hibát dob és nem indítja az audiot addig ameddig nem interaktáltunk ezért ez egy alternnatív audio indítási utvonal;
+        sound.play();
+        if (lenn && soundbool) sound1.play();
+        else if (lenn) sound2.play();
+        soundbool=!soundbool;
+        let legalso,privatei=-1;
+        let p = game_area.offset();
+        let x = e.pageX - p.left;
+        let j = Math.round((x - offset_x / 2) / offset_x);
+        //megkeresi a legalsó téglát az oszlopba
+        for (let i=0;i<sorok_szama;i++) {
+            if ($('img[id=x'+i+'y'+j+']').attr('src')!=="" && $('img[id=x'+i+'y'+j+']').attr('src')!==undefined) {
+                legalso='img[id=x'+i+'y'+j+']';
+                privatei=i;
+            }
+            else {
+                break;
+            }
+        }
+        if (privatei+tegla_array.length>14 && lenn) return;
+        //ha nincs lenn akkor lekéri az egybetartozó téglákat
+        if (!lenn) {
+            tegla_array.length=0;
+            for (let i=sorok_szama-1;i>=0;i--) {
+                if ($('img[id=x'+i+'y'+j+']').attr('src')===$(legalso).attr('src')) {
+                    tegla_array.push($('img[id=x'+i+'y'+j+']'));
+                }
+                else if ($('img[id=x'+i+'y'+j+']').attr('src')==="" || $('img[id=x'+i+'y'+j+']').attr('src')===undefined){
+                }
+                else break
+            }
+            for (let i = 0; i<tegla_array.length;i++) {
+                let str = tegla_array[i].attr('id');
+                if (str.length===4)
+                    str = str.substring(0, 1) + 16 + str.substring(2);
+                else
+                    str = str.substring(0, 1) + (16) + str.substring(3);
+                tegla_array[i].attr('id',str);
+            }
+        }
+        //téglák mozgatása fel és le
+        let onmagahozKepestEltolas=1;
+        if (tegla_array[0]===legalso) onmagahozKepestEltolas=tegla_array.length+1;
+        for (let i=0;i<tegla_array.length;i++) {
+            if (lenn) {
+                let str = tegla_array[i].attr('id');
+                if (str.length===4)
+                    str = str.substring(0, 1) + (privatei+i+1) + str.substring(2);
+                else
+                    str = str.substring(0, 1) + (privatei+i+1) + str.substring(3);
+                tegla_array[i].attr('id',str);
+                tegla_array[i].animate({top: ((privatei+i+onmagahozKepestEltolas) * offset_y / 1.5)}, 100);
+            } else {
+                tegla = $(legalso);
+                tegla_array[i].animate({top: 530-i*offset_y/1.5}, 100);
+            }
+        }
+        if (lenn) {
+            osszetartozoTegla(tegla_array[0])
+            torles();
+        }
+        lenn=!lenn;
     }
 });
