@@ -159,7 +159,7 @@ $(document).ready(function() {
                     $(this).remove();
                 });
             }
-            if (score>=10000-ido+6000+korKezdetiScore) {
+            if (score>=10000-ido+60000+korKezdetiScore) {
                 kovetkezoSzint();
             }
         }
