@@ -24,6 +24,7 @@ $(document).ready(function() {
     let sound = new Audio('Media/hatterZene.mp3'),sound1 = new Audio('Media/puty.mp3'),sound2 = new Audio('Media/puty.mp3'),sound3 = new Audio('Media/score.mp3'),sound4 = new Audio('Media/lvlup.mp3'), soundbool=true;
     sound.loop = true;
     sound.play();
+    sound.volume=0.3; end.volume=0.3; sound1.volume=0.3; sound2.volume=0.3; sound3.volume=0.3; sound4.volume=0.3;
     //player setup
     game_area.append(player);
     player.css({width: player_width});
@@ -98,9 +99,6 @@ $(document).ready(function() {
                     $(this).remove();
                 });
             }
-            if (score>=10000-ido+60000+korKezdetiScore) {
-                kovetkezoSzint();
-            }
         }
         megtalalt.length=0;
         setTimeout(helyremozgat, 300);
@@ -132,7 +130,7 @@ $(document).ready(function() {
                     $('img[id=x'+i+'y'+j+']').attr('id','x'+(i+1)+'y'+j);
                 }
                 else if ($('img[id=x'+i+'y'+j+']').attr('src')!==undefined && i+1>=14){
-                    ido=8000;
+                    ido=10000;
                     szinek_szama=4;
                     clearInterval(beszurasKezelo);
                     beszurasKezelo= setInterval(ujSortBeszur,ido);
@@ -143,6 +141,8 @@ $(document).ready(function() {
                     alaphelyzetetGeneral();
                     sound.pause();
                     end.play();
+                    lvl=1;
+                    $('#pontok p').text("Level " + lvl);
                     setTimeout(function() {
                         sound.play()
                     },5000);
@@ -317,6 +317,9 @@ $(document).ready(function() {
         if (lenn) {
             osszetartozoTegla(tegla_array[0])
             torles();
+            if (score>=10000-ido+60000+korKezdetiScore) {
+                kovetkezoSzint();
+            }
         }
         lenn=!lenn;
     }
