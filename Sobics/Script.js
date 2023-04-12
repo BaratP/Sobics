@@ -61,7 +61,7 @@ $(document).ready(function() {
 
     });
     let jatszhato=true;
-    $(this).click(function (e){
+    $('#jatekter').click(function (e){
         if (jatszhato)
         clickAction(e);
     })
